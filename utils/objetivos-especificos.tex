@@ -1,68 +1,68 @@
 
 % avoid magic strings with objetivos específicos
-\newcommand\objetivoEspecificoA{Reescribir la lógica crítica de la aplicación actualmente implementada en el cliente, para ser ejecutada de forma segura en AWS Lambda.}
+\newcommand\objetivoEspecificoA{Reubicar la lógica de negocio crítica desde el cliente hacia entornos de ejecución del lado del servidor, de modo que se reduzca la superficie de exposición y se habilite la instrumentación de los flujos sensibles para fines de auditoría y trazabilidad.}
 
-\newcommand\objetivoEspecificoB{Actualizar progresivamente la base de código de la aplicación \textit{backend} y \textit{frontend} para reemplazar las dependencias actuales de Firebase por servicios equivalentes de AWS.}
+\newcommand\objetivoEspecificoB{Refactorizar la arquitectura interna del \textit{frontend} y del \textit{backend} mediante patrones arquitectónicos modulares que aíslen responsabilidades y reduzcan el acoplamiento, habilitando la evolución independiente de cada dominio funcional y de cada motor tecnológico subyacente.}
 
-\newcommand\objetivoEspecificoC{Diseñar e implementar una arquitectura centralizada en AWS que facilite la migración de la base de datos y de los registros de usuarios desde Firebase, incluyendo la construcción de una pipeline ETL basada en servicios como Step Functions, Lambda y SQS.}
+\newcommand\objetivoEspecificoC{Diseñar e implementar un sistema transversal de observabilidad estructurada que permita diagnosticar el comportamiento del sistema en producción a través de componentes heterogéneos, soportado por infraestructura como código y notificaciones proactivas.}
 
-\newcommand\objetivoEspecificoD{Implementar pruebas automatizadas sobre el código refactorizado durante la migración, así como una pipeline de integración continua (CI).}
+\newcommand\objetivoEspecificoD{Consolidar prácticas automatizadas de aseguramiento de calidad continuo a lo largo del ciclo de vida del desarrollo, de modo que la velocidad de cambio se sostenga sin degradar la confiabilidad ni la seguridad del sistema.}
 
 % Activities
-% - Objective A
+% - Objective A: reubicación de lógica crítica al servidor
 \newcommand{\objectivoEspecificoAActividadadA}{
-  Identificación de lógica crítica actual en el \textit{frontend}.
+  Inventario de la lógica sensible expuesta en el cliente y clasificación de cada flujo según su afinidad con el ciclo de vida de la sesión del usuario.
 }
 \newcommand{\objectivoEspecificoAActividadadB}{
-  Diseño de funciones Lambda seguras.
+  Diseño e implementación de funciones \textit{serverless} (AWS Lambda) para la lógica de servicios y las integraciones asíncronas.
 }
 \newcommand{\objectivoEspecificoAActividadadC}{
-  Implementación y pruebas de funciones.
+  Construcción de un \textit{Backend-for-Frontend} sobre Nuxt~3 para encapsular llamadas a APIs externas (Rama Judicial, SAMAI) y centralizar saneamiento, autenticación y observabilidad.
 }
 \newcommand{\objectivoEspecificoAActividadadD}{
-  Despliegue en entorno AWS.
+  Verificación de que la lógica crítica deja de ser inspeccionable desde el cliente y de que los flujos quedan instrumentados para auditoría.
 }
 
-% - Objective B
+% - Objective B: refactorización arquitectónica interna
 \newcommand{\objectivoEspecificoBActividadadA}{
-  Identificación de dependencias actuales a Firebase.
+  Organización del \textit{frontend} en \textit{bounded contexts} bajo principios de \textit{Domain-Driven Design}, materializados mediante Nuxt Layers.
 }
 \newcommand{\objectivoEspecificoBActividadadB}{
-  Selección de servicios AWS equivalentes.
+  Aislamiento del tema visual en una capa independiente del dominio del negocio.
 }
 \newcommand{\objectivoEspecificoBActividadadC}{
-  Refactorización e integración.
+  Refactorización de las funciones Lambda hacia el patrón \textit{Handler--Service--Repository} con repositorios definidos por interfaz.
 }
 \newcommand{\objectivoEspecificoBActividadadD}{
-  Validación de funcionamiento.
+  Validación del desacoplamiento mediante pruebas unitarias del \textit{service} con implementaciones \textit{mock} del repositorio.
 }
 
-% - Objective C
+% - Objective C: observabilidad transversal
 \newcommand{\objectivoEspecificoCActividadadA}{
-  Levantamiento de arquitectura actual.
+  Diseño de un esquema estandarizado de telemetría estructurada en formato JSON para frontend y backend.
 }
 \newcommand{\objectivoEspecificoCActividadadB}{
-  Diseño de nueva arquitectura AWS.
+  Implementación de interceptores HTTP en ambas capas que emitan eventos con identificadores de correlación propagados.
 }
 \newcommand{\objectivoEspecificoCActividadadC}{
-  Implementación de migración de datos y usuarios.
+  Aprovisionamiento mediante CloudFormation de filtros de métricas, alarmas, dashboards y notificaciones proactivas hacia Telegram.
 }
 \newcommand{\objectivoEspecificoCActividadadD}{
-  Validación y pruebas.
+  Validación del subsistema correlacionando eventos de extremo a extremo en flujos reales (BFF, microservicios, integraciones externas).
 }
 
-% - Objective D
+% - Objective D: aseguramiento de calidad continuo
 \newcommand{\objectivoEspecificoDActividadadA}{
-  Identificación de componentes críticos a testear.
+  Configuración de \textit{hooks} de Git con Lefthook (\textit{pre-commit}, \textit{commit-msg}, \textit{post-merge}) integrados con ESLint, Prettier y Commitlint.
 }
 \newcommand{\objectivoEspecificoDActividadadB}{
-  Desarrollo de pruebas automatizadas
+  Implementación de pipelines de integración continua en GitHub Actions con validación diferencial sobre archivos modificados.
 }
 \newcommand{\objectivoEspecificoDActividadadC}{
-  Implementación de pipeline de CI.
+  Construcción de la suite de pruebas \textit{end-to-end} en Playwright sobre la \textit{Firebase Emulator Suite}.
 }
 \newcommand{\objectivoEspecificoDActividadadD}{
-  Validación continua.
+  Construcción de la suite de pruebas unitarias de las reglas de seguridad de Firestore con Vitest y \texttt{@firebase/rules-unit-testing}.
 }
 
 % - Objective Document

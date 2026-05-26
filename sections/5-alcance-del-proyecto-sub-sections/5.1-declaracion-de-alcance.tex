@@ -1,19 +1,7 @@
 \subsection{Declaración de Alcance del Proyecto}
 
-Este proyecto contempla la migración y adaptación de los componentes de software en Paralegales que actualmente dependen de Firebase, ya sea para autenticación o como base de datos (Firestore), hacia servicios equivalentes en AWS. El enfoque principal estará en funcionalidades clave como autenticación, almacenamiento y gestión de datos, con el objetivo de fortalecer la arquitectura técnica de la plataforma.
+Este proyecto se ejecuta sobre la plataforma Paralegales, un producto en operación con base de usuarios activa, y contempla una intervención técnica orientada a mitigar la deuda arquitectónica acumulada durante su etapa inicial de desarrollo sin comprometer la continuidad del servicio en producción. La estrategia adoptada es una \textbf{evolución arquitectónica híbrida} que combina Firebase y AWS de manera deliberada, en lugar de una migración total de proveedor de nube. Esta decisión condiciona de manera explícita el espacio de acción del trabajo y delimita lo que está dentro y fuera de su alcance.
 
-Como se puede apreciar en la \autoref{fig:arbol_de_objetivos}, esta migración busca reducir la exposición de lógica crítica en el \textit{frontend} mediante su delegación a entornos seguros del \textit{backend}, como AWS Lambda. Esto permitirá mejorar aspectos fundamentales como la seguridad, la definición clara de responsabilidades arquitectónicas, y la reducción de costos operativos derivados del uso de tecnologías propietarias.
+Dentro del alcance se encuentran las cuatro líneas de intervención que materializan la estrategia descrita: (i) la reubicación de la lógica de negocio crítica del cliente hacia entornos de ejecución del lado del servidor; (ii) la refactorización de la arquitectura interna del \textit{frontend} y del \textit{backend} bajo patrones modulares que aíslen responsabilidades y permitan la evolución independiente de cada componente; (iii) la construcción de un sistema transversal de observabilidad estructurada con su correspondiente infraestructura como código; y (iv) la consolidación de prácticas automatizadas de aseguramiento de calidad continuo a lo largo del ciclo de vida del desarrollo. Estas líneas se aplican sobre los módulos funcionales activos de la plataforma —autenticación, gestión de procesos judiciales y comunicación masiva mediante campañas—, que constituyen la materia sobre la cual se materializan las decisiones técnicas adoptadas.
 
-Además, como se refleja en los niveles inferiores del árbol, la propuesta fomenta la adopción de servicios equivalentes en AWS y el seguimiento de buenas prácticas de desarrollo, priorizando la calidad técnica y la sostenibilidad del sistema por encima de la velocidad en la entrega.
-
-Asimismo, esta reestructuración permitirá avanzar hacia una homogeneización tecnológica dentro de un ecosistema centralizado, lo que facilitará la escalabilidad, el mantenimiento y la integración de los distintos componentes de la plataforma.
-
-Quedan excluidas del alcance en esta fase la migración de herramientas como Firebase Analytics o el sistema de mensajería \textit{push}, al no formar parte del núcleo funcional contemplado en esta etapa del proyecto.
-
-\newcommand\arbolDeObjetivosCaption{Árbol de objetivos del proyecto. \hspace{1em}}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{img/figures/fig7-arbol-de-objetivos.png}
-  \caption[\arbolDeObjetivosCaption]{\arbolDeObjetivosCaption Fuente: Elaboración Propia.}
-  \label{fig:arbol_de_objetivos}
-\end{figure}
+Quedan fuera del alcance de este trabajo: (a) la sustitución de Firebase Authentication por un proveedor alternativo de gestión de identidades; (b) la migración del motor de persistencia desde Cloud Firestore hacia otro sistema de bases de datos —incluida la migración hacia Amazon DynamoDB que fue evaluada y descartada por la organización durante la fase exploratoria—; (c) la sustitución total del proveedor de nube, es decir, la transición a un entorno 100\% AWS; y (d) la incorporación de funcionalidades de negocio nuevas no relacionadas con los ejes de la intervención arquitectónica. Esta delimitación es coherente con la hipótesis del trabajo: el valor esperado se obtiene mediante la reconfiguración de las relaciones entre los subsistemas existentes y la introducción de capacidades transversales, no mediante la sustitución disruptiva del sustrato tecnológico que actualmente soporta el producto.

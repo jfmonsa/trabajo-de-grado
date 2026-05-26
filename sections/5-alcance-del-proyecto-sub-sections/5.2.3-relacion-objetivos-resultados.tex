@@ -3,31 +3,31 @@
 % avoid nested structures in table
 \newcommand\objetivoEspecificoAResulados{
   \begin{itemize}[leftmargin=*, topsep=0pt, itemsep=0pt]
-    \item Reducción del riesgo de exposición de lógica sensible al moverla fuera del cliente.
-    \item Trazabilidad de la ejecución de la lógica crítica mediante CloudWatch y otros servicios de monitoreo de AWS.
+    \item Lógica crítica de los módulos de procesos y campañas ejecutándose en entornos del lado del servidor (AWS Lambda y BFF en Nuxt), sin exposición en el cliente.
+    \item Integraciones con APIs externas (Rama Judicial y SAMAI) encapsuladas en el BFF como \textit{proxy} controlado, con saneamiento y manejo centralizado de errores.
   \end{itemize}
 }
 
 \newcommand\objetivoEspecificoBResultados{
   \begin{itemize}[leftmargin=*, topsep=0pt, itemsep=0pt]
-    \item Eliminación gradual de acoplamientos con servicios propietarios de Google.
-    \item Minimizar el impacto de la migración garantizando una transición controlada.
+    \item \textit{Frontend} organizado en Nuxt Layers por \textit{bounded context} bajo DDD, con tema visual aislado en una capa independiente.
+    \item \textit{Backend} en Go con separación estricta \textit{Handler--Service--Repository} y repositorios definidos por interfaz, que habilitan pruebas unitarias sin acceso a la base de datos real y preservan la opción de sustituir el motor de persistencia sin tocar la lógica de negocio.
   \end{itemize}
 }
 
 \newcommand\objetivoEspecificoCResultados{
   \begin{itemize}[leftmargin=*, topsep=0pt, itemsep=0pt]
-    \item Infraestructura organizada y mantenible sobre AWS, que garantice la integridad y trazabilidad de los datos durante la migración.
-    \item Migración exitosa de datos desde Firestore a DynamoDB mediante una pipeline ETL.
-    \item Registro de usuarios migrados correctamente a Amazon Cognito con integraciones funcionales.
+    \item Telemetría estructurada en formato JSON emitida por interceptores HTTP en el \textit{frontend} (BFF/Nuxt) y en el \textit{backend} (Go), con identificadores de correlación propagados.
+    \item Dashboards de CloudWatch, alarmas configuradas y canal de Telegram operativos para la recepción de notificaciones proactivas ante anomalías.
+    \item Infraestructura del subsistema de observabilidad definida y versionada como código mediante CloudFormation.
   \end{itemize}
 }
 
 \newcommand\objetivoEspecificoDResultados{
   \begin{itemize}[leftmargin=1em, topsep=2pt, itemsep=2pt]
-    \item Las partes del sistema afectadas por la migración cuentan con una cobertura mínima del 70\% en pruebas automatizadas.
-    \item Se implementa una pipeline de integración continua (CI) que ejecuta automáticamente las pruebas en cada cambio o despliegue.
-    \item Se detectan y corrigen errores de manera temprana gracias a la automatización del proceso de validación del código.
+    \item \textit{Hooks} de \textit{pre-commit}, \textit{commit-msg} y \textit{post-merge} operativos a través de Lefthook, integrando ESLint, Prettier y Commitlint.
+    \item Pipeline de integración continua en GitHub Actions que ejecuta validación diferencial sobre los archivos modificados en cada \textit{pull request}.
+    \item Suite de pruebas \textit{end-to-end} con Playwright y suite de pruebas unitarias de las reglas de seguridad de Firestore con Vitest, ambas ejecutándose sobre la \textit{Firebase Emulator Suite}.
   \end{itemize}
 }
 
