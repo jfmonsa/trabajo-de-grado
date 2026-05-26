@@ -1,0 +1,54 @@
+\section{Descripción del problema}
+
+\subsection{Contexto del proyecto y estado inicial de la plataforma}
+
+Paralegales no es un producto concebido desde cero en el marco de este trabajo de grado, sino una plataforma en operación, con base de usuarios real y desarrollo continuo, perteneciente a la empresa Webcloster S.A.S. Su construcción inicial estuvo guiada por una premisa explícita: alcanzar el mercado lo antes posible para validar la propuesta de valor en el sector \textit{legaltech} colombiano. Para sostener ese ritmo, el equipo se apoyó intensivamente en Firebase como plataforma de \textit{Backend como Servicio} (BaaS), aprovechando su SDK para resolver autenticación, persistencia y consultas en tiempo real con un mínimo de infraestructura propia. Sobre ese sustrato se fueron incorporando, de manera incremental, funciones AWS Lambda escritas en Go para soportar flujos que requerían lógica del lado del servidor, integraciones externas o procesamiento asíncrono.
+
+Esta evolución orgánica produjo un sistema funcional y comercialmente viable, pero también acumuló una deuda técnica significativa derivada de decisiones tomadas bajo presión de tiempo \cite{BirrEngwall2024}. A diferencia de un proyecto nuevo, donde es posible elegir la arquitectura sin restricciones, cualquier intervención sobre Paralegales debe preservar la continuidad del servicio, respetar los datos existentes en producción y minimizar la fricción para una base de usuarios activa. Estas restricciones condicionan de manera decisiva el espacio de soluciones disponibles y descartan, en la práctica, intervenciones disruptivas como reescrituras desde cero o migraciones totales de proveedor de nube en un único movimiento.
+
+\subsection{Problemática técnica identificada}
+
+A partir del análisis del estado inicial del sistema, se identifican cuatro frentes problemáticos que motivan el presente trabajo:
+
+\begin{enumerate}
+  \item \textbf{Exposición de lógica de negocio crítica en el cliente:} la implementación apoyada en el SDK de Firebase llevó a que parte importante de la lógica sensible —validaciones, orquestación de operaciones sobre la base de datos y reglas de acceso a recursos— residiera directamente en el \textit{frontend}. Esta condición es inspeccionable, manipulable y replicable por terceros, configurando un caso paradigmático de \textit{Insecure Design}, una de las categorías de riesgo identificadas en el OWASP Top 10 \cite{OWASP2021}.
+
+  \item \textbf{Fragmentación arquitectónica entre Firebase y AWS:} la coexistencia de servicios Firebase (Auth, Firestore) y funciones AWS Lambda sin patrones arquitectónicos claros que gobernaran sus fronteras generó un sistema heterogéneo, difícil de razonar y de evolucionar. La ausencia de una capa que articulara explícitamente cuándo y cómo el cliente debe hablar con uno u otro proveedor incrementaba el acoplamiento entre las distintas capas y dificultaba la introducción de nuevos casos de uso sin tocar componentes no relacionados.
+
+  \item \textbf{Dependencia parcial de un proveedor único:} el uso intensivo del ecosistema Firebase introdujo el fenómeno conocido como \textit{vendor lock-in} \cite{OparaMartins2016, OparaMartins2014, Harauzek2022}, una condición que reduce el margen de maniobra técnica y económica de la plataforma a largo plazo. Si bien este factor por sí solo no justifica una intervención disruptiva, sí refuerza la conveniencia de introducir abstracciones que mantengan abierta la opción de migrar componentes específicos en el futuro.
+
+  \item \textbf{Ausencia de observabilidad transversal y de prácticas formales de aseguramiento de calidad:} la plataforma carecía de un sistema unificado para registrar, correlacionar y exponer el comportamiento del sistema en producción, especialmente sobre integraciones críticas con servicios externos como la Rama Judicial. De manera complementaria, las prácticas de ciclo de vida de desarrollo (\textit{linting}, formateo, validación de \textit{commits}, integración continua y pruebas automatizadas) no estaban formalmente automatizadas, lo que dificultaba sostener velocidad de cambio sin degradar la confiabilidad del producto.
+\end{enumerate}
+
+\subsection{Hipótesis}
+
+A partir del análisis anterior, este trabajo plantea la siguiente hipótesis central:
+
+\begin{quote}
+  \textbf{Una estrategia de \textit{evolución arquitectónica híbrida} sobre la plataforma Paralegales —articulada mediante (i) la introducción de un patrón \textit{Backend-for-Frontend} que reubica la lógica crítica fuera del cliente, (ii) una organización modular del \textit{frontend} bajo principios de \textit{Domain-Driven Design}, (iii) una capa de servicios \textit{backend} con separación estricta \textit{Handler--Service--Repository}, y (iv) capacidades transversales de observabilidad estructurada y aseguramiento de calidad continuo— permite mitigar los riesgos de seguridad, la fragmentación arquitectónica y los déficits de mantenibilidad del sistema, sin incurrir en el costo operacional, el riesgo de interrupción del servicio ni la disrupción organizacional que implicaría una migración total del proveedor de nube.}
+\end{quote}
+
+\subsubsection*{Supuestos subyacentes}
+
+La hipótesis anterior descansa sobre un conjunto de supuestos que conviene explicitar, dado que delimitan su ámbito de validez:
+
+\begin{itemize}
+  \item Los servicios Firebase Auth y Firestore satisfacen los requerimientos no-funcionales de seguridad, escalabilidad y consistencia exigidos por la etapa actual del producto, por lo que su sustitución no constituye un objetivo prioritario.
+  \item El costo total —técnico, operativo y organizacional— de una migración integral del motor de persistencia no se justifica frente a los beneficios esperados en la etapa actual de Paralegales. Este supuesto se validó empíricamente durante el proyecto: se inició la migración de Firestore hacia AWS DynamoDB y posteriormente fue descartada por decisión de producto y empresa tras evaluar el balance costo-beneficio. La adopción del patrón \textit{Handler--Service--Repository}, motivada originalmente por esa migración, se mantuvo por los beneficios independientes de testabilidad y desacoplamiento que aporta.
+  \item Introducir abstracciones arquitectónicas explícitas (BFF, Nuxt Layers, repositorios con interfaz) preserva la opción de migrar componentes específicos en el futuro sin re-arquitecturar las capas que dependen de ellos.
+  \item Las prácticas formales de aseguramiento de calidad pueden sostenerse por el equipo de desarrollo siempre que estén automatizadas en \textit{hooks} locales y \textit{pipelines} de integración continua, de modo que su cumplimiento no dependa de la disciplina individual.
+\end{itemize}
+
+\subsubsection*{Dimensiones de análisis}
+
+La hipótesis articula su efecto esperado sobre cinco dimensiones del sistema, cada una de las cuales se conecta con uno o varios de los frentes problemáticos descritos previamente:
+
+\begin{itemize}
+  \item \textbf{Seguridad:} reducción de la superficie de exposición de lógica de negocio sensible y endurecimiento del control de acceso a los datos.
+  \item \textbf{Mantenibilidad:} separación explícita de responsabilidades en \textit{frontend} y \textit{backend}, de modo que cambios localizados no requieran análisis de impacto sobre componentes no relacionados.
+  \item \textbf{Trazabilidad y observabilidad:} capacidad de diagnosticar el estado del sistema en producción a partir de telemetría estructurada y correlacionada a través de componentes heterogéneos.
+  \item \textbf{Calidad continua:} prevención automatizada de regresiones funcionales y de seguridad a lo largo del ciclo de vida del desarrollo.
+  \item \textbf{Agilidad de evolución:} capacidad de incorporar nuevas \textit{features} o sustituir componentes técnicos sin acoplamiento transversal que multiplique el costo del cambio.
+\end{itemize}
+
+Estas dimensiones constituyen el marco bajo el cual se valoran las decisiones técnicas adoptadas a lo largo del proyecto y, a la vez, sirven de referencia implícita para juzgar el grado de cumplimiento de la hipótesis al cierre del trabajo.
