@@ -1,0 +1,29 @@
+\subsection{Aseguramiento de Calidad Continuo}\label{subsec:resultado-d}
+
+El cuarto objetivo apuntaba a consolidar prácticas automatizadas de aseguramiento de calidad a lo largo del ciclo de vida del desarrollo, de modo que la velocidad de cambio se sostuviera sin degradar la confiabilidad ni la seguridad del sistema. El resultado obtenido es un sistema de validación multicapa operativo, cuya evidencia se concentra en los artefactos del proceso de desarrollo.
+
+En los entornos locales, los \textit{hooks} de Git gestionados con Lefthook —\textit{pre-commit}, \textit{commit-msg} y \textit{post-merge}— intervienen el flujo de trabajo de manera efectiva: el formateo y el \textit{linting} se ejecutan sobre los archivos preparados, y los mensajes que no respetan el estándar \textit{Conventional Commits} son rechazados antes de ingresar al historial, como evidencia la \autoref{fig:resultado-commit-rechazado}.
+
+\newcommand\resultadoCommitCaption{\textit{Hook} de \textit{commit-msg} rechazando un mensaje que no cumple el estándar \textit{Conventional Commits}. \hspace{1em}}
+\begin{figure}[H]
+  \centering
+  % TODO: reemplazar el marcador por la captura real (commit rechazado por commitlint)
+  % \includegraphics[width=0.85\textwidth]{img/figures/fig38-resultado-commit-rechazado.png}
+  \fbox{\parbox[c][4cm][c]{0.9\textwidth}{\centering\textit{[Pendiente: captura del \textit{commit} rechazado por Commitlint en la terminal]}}}
+  \caption[\resultadoCommitCaption]{\resultadoCommitCaption Fuente: Elaboración propia.}
+  \label{fig:resultado-commit-rechazado}
+\end{figure}
+
+En los repositorios compartidos, el \textit{pipeline} de integración continua en GitHub Actions se ejecuta de forma obligatoria frente a cada \textit{pull request} dirigida a ramas protegidas, aplicando validación diferencial sobre los archivos modificados. La \autoref{fig:resultado-ci} muestra una corrida del \textit{pipeline} que condiciona la integración de los cambios al cumplimiento de las validaciones.
+
+\newcommand\resultadoCiCaption{Corrida del \textit{pipeline} de integración continua en GitHub Actions sobre una \textit{pull request}. \hspace{1em}}
+\begin{figure}[H]
+  \centering
+  % TODO: reemplazar el marcador por la captura real (ejecución de CI en un PR)
+  % \includegraphics[width=1\textwidth]{img/figures/fig39-resultado-ci.png}
+  \fbox{\parbox[c][4cm][c]{0.9\textwidth}{\centering\textit{[Pendiente: captura de la ejecución del \textit{pipeline} de CI sobre una \textit{pull request}]}}}
+  \caption[\resultadoCiCaption]{\resultadoCiCaption Fuente: Elaboración propia.}
+  \label{fig:resultado-ci}
+\end{figure}
+
+La suite de pruebas unitarias de las reglas de seguridad de Firestore, ejecutada sobre la \textit{Firebase Emulator Suite}, forma parte de esta estrategia de aseguramiento; su construcción y sus resultados se detallan en el capítulo dedicado a las pruebas del sistema.

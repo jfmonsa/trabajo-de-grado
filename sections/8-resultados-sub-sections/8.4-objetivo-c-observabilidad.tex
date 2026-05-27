@@ -1,0 +1,19 @@
+\subsection{Sistema de Observabilidad en Operación}\label{subsec:resultado-c}
+
+El tercer objetivo perseguía un sistema transversal de observabilidad estructurada capaz de diagnosticar el comportamiento del sistema en producción a través de componentes heterogéneos, soportado por infraestructura como código y notificaciones proactivas. El resultado obtenido es un subsistema operativo cuya evidencia abarca tanto los artefactos de telemetría como su impacto sobre la operación.
+
+La telemetría estructurada en formato JSON se emite efectivamente desde los interceptores HTTP del \textit{frontend} (BFF en Nuxt) y del \textit{backend} (Go), con identificadores de correlación propagados a lo largo de la cadena de llamadas. La \autoref{fig:resultado-traza-correlacionada} ilustra la correlación extremo a extremo de una única acción de usuario que atraviesa el BFF, las funciones Lambda y una integración externa, identificada por un mismo \textit{correlation-id}.
+
+\newcommand\resultadoTrazaCaption{Correlación extremo a extremo de una acción de usuario a través del BFF, las funciones Lambda y una integración externa. \hspace{1em}}
+\begin{figure}[H]
+  \centering
+  % TODO: reemplazar el marcador por la captura real (traza correlacionada / sobre JSON con correlation-id)
+  % \includegraphics[width=1\textwidth]{img/figures/fig37-resultado-traza-correlacionada.png}
+  \fbox{\parbox[c][4cm][c]{0.9\textwidth}{\centering\textit{[Pendiente: captura de la traza correlacionada y el sobre JSON con el \textit{correlation-id} propagado]}}}
+  \caption[\resultadoTrazaCaption]{\resultadoTrazaCaption Fuente: Elaboración propia.}
+  \label{fig:resultado-traza-correlacionada}
+\end{figure}
+
+La infraestructura de observabilidad, definida y versionada como código mediante CloudFormation, se encuentra operativa: el panel de control de CloudWatch (\autoref{fig:dashboard-observabilidad}), las alarmas configuradas (\autoref{fig:dashboard-observabilidad-alerts}) y el canal de Telegram para notificaciones proactivas (\autoref{fig:telegram-alerts-observability}) funcionan de forma integrada.
+
+La consolidación de este subsistema produjo beneficios verificables sobre la operación de la plataforma. En primer lugar, dado que Paralegales consume APIs gubernamentales que históricamente presentan latencias altas o tiempos de inactividad, el sistema permite medir y auditar de forma objetiva la disponibilidad de dichos proveedores, separando de manera concluyente los fallos internos de las caídas en infraestructuras externas. En segundo lugar, al asociar de forma segura la actividad de red con los identificadores del usuario activo —como el ID de cuenta y el plan de suscripción—, el equipo de soporte puede trazar e investigar el impacto de un error reportado por un cliente específico a través de toda la malla de microservicios. Finalmente, las alertas tempranas mediante mensajería instantánea permiten a los ingenieros mitigar fallos antes de que un porcentaje amplio de la base de usuarios perciba el impacto, reduciendo significativamente el Tiempo Medio de Recuperación (MTTR).

@@ -1,0 +1,17 @@
+\subsection{Reubicación de la Lógica Crítica al Servidor}\label{subsec:resultado-a}
+
+El primer objetivo específico planteaba reubicar la lógica de negocio crítica desde el cliente hacia entornos de ejecución del lado del servidor, reduciendo la superficie de exposición y habilitando la instrumentación de los flujos sensibles para fines de auditoría y trazabilidad. El resultado central que materializa este objetivo fue la introducción del patrón \textit{Backend-for-Frontend} (BFF) en \texttt{paralegales-ui} —inexistente en la arquitectura previa— como capa intermediaria entre el cliente y los servicios.
+
+Antes de la intervención, el cliente consumía directamente las APIs externas y alojaba lógica sensible inspeccionable desde el navegador. Tras la incorporación del BFF, el cliente únicamente emite la intención del usuario hacia la capa del servidor, mientras que la integración con la API de la Rama Judicial queda encapsulada como un \textit{proxy} controlado que centraliza el saneamiento, el manejo de errores y la instrumentación de auditoría. La \autoref{fig:resultado-bff-red} evidencia este cambio mediante la inspección del tráfico de red: las peticiones del cliente se dirigen exclusivamente al BFF, sin exponer los \textit{endpoints} gubernamentales ni la lógica que los consume.
+
+\newcommand\resultadoBffRedCaption{Inspección del tráfico de red: las peticiones del cliente se dirigen exclusivamente al BFF, sin exponer las integraciones externas. \hspace{1em}}
+\begin{figure}[H]
+  \centering
+  % TODO: reemplazar el marcador por la captura real (inspección de red antes/después de introducir el BFF)
+  % \includegraphics[width=1\textwidth]{img/figures/fig35-resultado-bff-red.png}
+  \fbox{\parbox[c][4cm][c]{0.9\textwidth}{\centering\textit{[Pendiente: captura de la inspección de red mostrando que el cliente solo invoca al BFF]}}}
+  \caption[\resultadoBffRedCaption]{\resultadoBffRedCaption Fuente: Elaboración propia.}
+  \label{fig:resultado-bff-red}
+\end{figure}
+
+De esta manera, la lógica crítica de los módulos de procesos y campañas pasó a ejecutarse en entornos del lado del servidor —funciones AWS Lambda y el propio BFF en Nuxt—, dejando de ser inspeccionable desde el cliente. Las integraciones del \textit{backend} con otros sistemas externos permanecen encapsuladas en la capa de microservicios, fuera del alcance del cliente.

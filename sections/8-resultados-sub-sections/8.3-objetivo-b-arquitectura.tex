@@ -1,0 +1,17 @@
+\subsection{Refactorización de la Arquitectura Interna}\label{subsec:resultado-b}
+
+El segundo objetivo buscaba refactorizar la arquitectura interna del \textit{frontend} y del \textit{backend} mediante patrones modulares que aislaran responsabilidades y habilitaran la evolución independiente de cada dominio funcional. La evidencia del resultado es de carácter estructural y se aprecia en la organización final del código.
+
+En el \textit{frontend}, la aplicación quedó organizada en nueve \textit{bounded contexts} implementados como Nuxt Layers, con el tema visual aislado en una capa independiente, tal como se describió en la \autoref{subsec:arquitectura}. La \autoref{fig:resultado-feature-tree} muestra la estructura resultante de \textit{features}, donde cada dominio constituye una unidad autónoma y componible que puede modificarse, probarse o reemplazarse de forma independiente.
+
+\newcommand\resultadoFeatureTreeCaption{Estructura final del \textit{frontend} organizada en \textit{bounded contexts} mediante Nuxt Layers. \hspace{1em}}
+\begin{figure}[H]
+  \centering
+  % TODO: reemplazar el marcador por la captura real (árbol de directorios de features)
+  % \includegraphics[width=0.7\textwidth]{img/figures/fig36-resultado-feature-tree.png}
+  \fbox{\parbox[c][4cm][c]{0.9\textwidth}{\centering\textit{[Pendiente: captura del árbol de directorios con las nueve \textit{features} y la capa de tema aislada]}}}
+  \caption[\resultadoFeatureTreeCaption]{\resultadoFeatureTreeCaption Fuente: Elaboración propia.}
+  \label{fig:resultado-feature-tree}
+\end{figure}
+
+En el \textit{backend}, las funciones Lambda adoptaron la separación \textit{Handler--Service--Repository} con repositorios definidos por interfaz, expuestas de forma unificada a través de Amazon API Gateway (\autoref{fig:api-gateway}). Este desacoplamiento habilita tanto la sustitución del motor de persistencia sin tocar la lógica de negocio como la validación de dicha lógica de forma aislada; la verificación de ese desacoplamiento mediante pruebas unitarias con implementaciones \textit{mock} del repositorio se documenta en el capítulo dedicado a las pruebas del sistema.

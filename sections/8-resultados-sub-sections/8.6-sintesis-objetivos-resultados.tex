@@ -1,0 +1,77 @@
+\subsection{Síntesis: Confrontación entre Objetivos y Resultados}\label{subsec:sintesis-resultados}
+
+La \autoref{tab:sintesis_resultados} consolida la confrontación entre los resultados esperados declarados en el alcance del proyecto y los resultados efectivamente obtenidos, indicando la evidencia que respalda cada uno. La columna izquierda reproduce los resultados esperados de la \autoref{tab:objetivos_resultados}, de modo que el contraste sea directo.
+
+% Resultados obtenidos por objetivo (columna derecha de la tabla de síntesis)
+\newcommand\objetivoEspecificoAObtenido{
+  \begin{itemize}[leftmargin=*, topsep=0pt, itemsep=0pt]
+    \item Patrón BFF introducido en \texttt{paralegales-ui}; lógica crítica reubicada al servidor y no inspeccionable desde el cliente (\autoref{fig:resultado-bff-red}).
+    \item Integración con la API de la Rama Judicial encapsulada como \textit{proxy} controlado en el BFF.
+  \end{itemize}
+}
+
+\newcommand\objetivoEspecificoBObtenido{
+  \begin{itemize}[leftmargin=*, topsep=0pt, itemsep=0pt]
+    \item \textit{Frontend} organizado en nueve \textit{bounded contexts} (Nuxt Layers) con tema visual aislado (\autoref{fig:resultado-feature-tree}).
+    \item \textit{Backend} con patrón \textit{Handler--Service--Repository} por interfaz (\autoref{fig:api-gateway}); validación de desacoplamiento detallada en el capítulo de pruebas.
+  \end{itemize}
+}
+
+\newcommand\objetivoEspecificoCObtenido{
+  \begin{itemize}[leftmargin=*, topsep=0pt, itemsep=0pt]
+    \item Telemetría JSON con identificadores de correlación en \textit{frontend} y \textit{backend} (\autoref{fig:resultado-traza-correlacionada}).
+    \item Dashboards, alarmas y canal de Telegram operativos; infraestructura como código en CloudFormation (\autoref{fig:dashboard-observabilidad}, \autoref{fig:dashboard-observabilidad-alerts}, \autoref{fig:telegram-alerts-observability}).
+  \end{itemize}
+}
+
+\newcommand\objetivoEspecificoDObtenido{
+  \begin{itemize}[leftmargin=*, topsep=0pt, itemsep=0pt]
+    \item \textit{Hooks} de Lefthook operativos: \textit{pre-commit}, \textit{commit-msg} y \textit{post-merge} (\autoref{fig:resultado-commit-rechazado}).
+    \item Pipeline de CI con validación diferencial en GitHub Actions (\autoref{fig:resultado-ci}).
+    \item Suite de pruebas de reglas de seguridad de Firestore: detallada en el capítulo de pruebas.
+  \end{itemize}
+}
+
+\newcommand\sintesisResultadosCaption{Confrontación entre los resultados esperados y los resultados obtenidos por objetivo específico. \hspace{1em}}
+
+\begingroup
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{|p{8cm}|p{8cm}|}
+  \hline
+  % Table Header
+  \grayTableHeaderCell{8cm}{Resultado esperado} &
+  \grayTableHeaderCell{8cm}{Resultado obtenido y evidencia} \\
+  \hline
+
+  \endfirsthead
+
+  \hline
+  \grayTableHeaderCell{8cm}{Resultado esperado} &
+  \grayTableHeaderCell{8cm}{Resultado obtenido y evidencia} \\
+  \hline
+  \endhead
+
+  \continuacionTablaFooter{2}
+  \endfoot
+  \endlastfoot
+
+  % Table Body
+  \tableCell{\objetivoEspecificoAResulados} &
+  \tableCell{\objetivoEspecificoAObtenido} \\
+  \hline
+
+  \tableCell{\objetivoEspecificoBResultados} &
+  \tableCell{\objetivoEspecificoBObtenido} \\
+  \hline
+
+  \tableCell{\objetivoEspecificoCResultados} &
+  \tableCell{\objetivoEspecificoCObtenido} \\
+  \hline
+
+  \tableCell{\objetivoEspecificoDResultados} &
+  \tableCell{\objetivoEspecificoDObtenido} \\
+  \hline
+  \caption[\sintesisResultadosCaption]{\sintesisResultadosCaption Fuente: Elaboración propia.}
+  \label{tab:sintesis_resultados}
+\end{longtable}
+\endgroup
